@@ -1,0 +1,37 @@
+backend/
+│
+├── config/
+│   ├── db.js                    # Conexión a la base de datos (MongoDB)
+│   └── config.js                # Configuración general (puertos, JWT, etc.)
+│
+├── controllers/
+│   ├── authController.js        # Controlador para autenticación y manejo de tokens
+│   ├── clienteController.js     # Controlador para CRUD de clientes
+│   ├── empresaController.js     # Controlador para registro/actualización de empresas
+│   ├── queueController.js       # Controlador para las colas
+│   └── userController.js        # Controlador para CRUD de usuarios (Admin/Staff)│
+│
+├── middlewares/
+│   ├── attachToken.js           # Middleware para adjuntar el token a la request
+│   └── validateToken.js         # Middleware para validar JWT y roles
+│
+├── models/
+│   ├── empresaModel.js          # Modelo de datos para empresas
+│   ├── userModel.js             # Modelo de datos para usuarios
+│   └── clienteModel.js          # Modelo de datos para clientes
+│
+├── routes/
+│   ├── authRoutes.js            # Rutas relacionadas con autenticación
+│   ├── clienteRoutes.js         # Rutas para CRUD de clientes
+│   ├── empresaRoutes.js         # Rutas para gestión de empresas
+│   ├── queueRoutes.js           # Rutas para la gestión de las colas
+│   └── userRoutes.js            # Rutas para CRUD de usuarios
+│
+├── utils/
+│   ├── generateToken.js         # Función para generar tokens JWT
+│   └── errorHandler.js          # Manejador de errores globales
+│
+├── index.js                     # Servidor principal
+├── .env                         # Variables de entorno
+├── package.json                 # Dependencias del proyecto
+└── .gitignore                   # Archivos a ignorar por Git
