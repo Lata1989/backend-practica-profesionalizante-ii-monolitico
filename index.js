@@ -26,7 +26,7 @@ app.use('/auth', authRoutes);
 app.use('/clientes', clienteRoutes);
 app.use('/empresas', empresaRoutes); // Todo probado en Postman - OK
 app.use('/queue', queueRoutes);
-app.use('/users', userRoutes);
+app.use('/users', userRoutes); // Todo probado en Postman - OK
 
 // Arrancar servidor
 connectDB()

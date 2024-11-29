@@ -19,7 +19,7 @@ router.post('/usuarios', validateToken, validateRol('owner'), registrarUsuario);
 router.get('/usuarios/empresa/:empresaId', validateToken, validateRol('owner'), obtenerUsuarios);
 
 // Ruta para obtener un usuario específico por su ID (solo puede acceder 'owner')
-router.get('/usuarios/:usuarioId', validateToken, validateRol('owner'), obtenerUsuario);
+router.get('/usuarios/:usuarioId', validateToken, validateRol('owner', 'admin', 'staff'), obtenerUsuario);
 
 // Ruta para actualizar los datos de un usuario (solo puede acceder 'owner')
 router.put('/usuarios/:usuarioId', validateToken, validateRol('owner'), actualizarUsuario);
