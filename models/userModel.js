@@ -8,7 +8,7 @@ export const Usuario = {
     localidad: '',
     email: '', // Email del usuario
     password: '', // Contraseña para la empresa (aunque no usaremos bcrypt)
-    rol: '',
+    rol: '', // Puede ser admin o staff
     box: '', // Box en el que atiende el trabajador
     fechaRegistro: '', // Lo asignamos en el controlador
     fechaBorrado: '',

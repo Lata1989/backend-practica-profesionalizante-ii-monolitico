@@ -1,9 +1,10 @@
-export const validateRol = (allowedRoles) => {
+export const validateRol = (...allowedRoles) => {
     return (req, res, next) => {
-      if (!allowedRoles.includes(req.user.rol)) {
-        return res.status(403).json({ message: 'Acceso no permitido. Rol insuficiente.' });
+      // Verificar que el usuario tiene un rol permitido
+      if (!allowedRoles.includes(req.user.role)) {
+        return res.status(403).json({ message: 'Acceso no permitido para este rol.' });
       }
-      next(); // El usuario tiene un rol permitido, continuar con la siguiente función
+      next(); // El rol es válido, continuar
     };
   };
   

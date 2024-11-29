@@ -22,12 +22,12 @@ export const loginEmpresa = async (req, res) => {
       return res.status(401).json({ message: 'Contraseña incorrecta' });
     }
 
-    // Crear un JWT para la empresa
+    // Crear un JWT para la empresa con rol 'owner'
     const token = jwt.sign(
       {
         empresaId: empresa._id, // ID de la empresa
         email: empresa.email,
-        role: 'empresa', // Puedes mantener el rol si es necesario
+        role: 'owner', // Rol de la empresa como 'owner'
       },
       process.env.JWT_SECRET,
       {
@@ -35,17 +35,19 @@ export const loginEmpresa = async (req, res) => {
       }
     );
 
-    // Devolver el token y el ID de la empresa en la respuesta
+    // Devolver el token, el ID de la empresa y el rol de la empresa
     res.status(200).json({
       message: 'Autenticación exitosa',
       token,
       empresaId: empresa._id.toString(), // Devolver el ID como cadena
+      role: 'owner',  // Devolver el rol 'owner' en la respuesta
     });
   } catch (error) {
     console.error('Error en el login de la empresa:', error);
     res.status(500).json({ message: 'Error al autenticar la empresa' });
   }
 };
+
 
 // Función de login para el staff
 export const loginUsuario = async (req, res) => {
@@ -85,9 +87,15 @@ export const loginUsuario = async (req, res) => {
       { expiresIn: '9h' }
     );
 
-    res.status(200).json({ message: 'Autenticación exitosa', token });
+    // Devolver el token, el rol del usuario y el id de la empresa a la que pertenece
+    res.status(200).json({
+      message: 'Autenticación exitosa',
+      token,
+      role: user.rol,  // Devolver el rol del usuario
+    });
   } catch (error) {
     console.error('Error en el login del staff:', error);
     res.status(500).json({ message: 'Error al autenticar al usuario' });
   }
 };
+
