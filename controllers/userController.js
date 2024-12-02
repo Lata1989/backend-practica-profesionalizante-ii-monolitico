@@ -91,6 +91,33 @@ export const obtenerUsuario = async (req, res) => {
   }
 };
 
+export const obtenerMiPerfil = async (req, res) => {
+  const { usuariId } = req.params;
+  const { userId } = req.user; // El userId desde el token
+
+  console.log(`Entre a la funcion.`);
+  console.log(`UsuariId: ${usuariId}`);
+  console.log(`UserId: ${userId}`);
+
+  if (usuariId !== userId) {
+    return res.status(403).json({ message: 'No tienes acceso a este perfil' });
+  }
+
+  try {
+    const db = getDB();
+    const usuario = await db.collection('usuarios').findOne({ _id: new ObjectId(usuariId) });
+
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ usuario });
+  } catch (error) {
+    console.error('Error al obtener el perfil:', error);
+    res.status(500).json({ message: 'Error al obtener el perfil' });
+  }
+};
+
 // Función para actualizar los datos de un usuario (verificando que no esté borrado)
 export const actualizarUsuario = async (req, res) => {
   const { usuarioId } = req.params;

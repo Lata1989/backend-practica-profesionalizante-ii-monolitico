@@ -3,6 +3,7 @@ import {
   registrarUsuario,
   obtenerUsuarios,
   obtenerUsuario,
+  obtenerMiPerfil,
   actualizarUsuario,
   eliminarUsuario,
   reactivarUsuario
@@ -19,7 +20,10 @@ router.post('/usuarios', validateToken, validateRol('owner'), registrarUsuario);
 router.get('/usuarios/empresa/:empresaId', validateToken, validateRol('owner'), obtenerUsuarios);
 
 // Ruta para obtener un usuario específico por su ID (solo puede acceder 'owner')
-router.get('/usuarios/:usuarioId', validateToken, validateRol('owner', 'admin', 'staff'), obtenerUsuario);
+router.get('/usuarios/:usuarioId', validateToken, validateRol('owner'), obtenerUsuario);
+
+// Ruta para obtener un usuario específico por su ID.
+router.get('/usuarios/miperfil/:usuariId', validateToken, validateRol('staff', 'admin'), obtenerMiPerfil);
 
 // Ruta para actualizar los datos de un usuario (solo puede acceder 'owner')
 router.put('/usuarios/:usuarioId', validateToken, validateRol('owner'), actualizarUsuario);

@@ -87,13 +87,14 @@ export const loginUsuario = async (req, res) => {
       { expiresIn: '9h' }
     );
 
-    // Devolver el token, el rol, el ID de la empresa y el box en el que atiende
+    // Devolver el token, el rol, el ID de la empresa, el box y el ID del usuario
     res.status(200).json({
       message: 'Autenticación exitosa',
       token,
+      userId: user._id, // Devolver el ID del usuario
       role: user.rol,
       idEmpresa: user.idEmpresa,
-      box: user.box, // Incluir el box del usuario
+      box: user.box,
     });
   } catch (error) {
     console.error('Error en el login del staff:', error);

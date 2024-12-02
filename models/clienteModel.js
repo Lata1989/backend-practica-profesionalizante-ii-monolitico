@@ -4,6 +4,8 @@ export const Cliente = {
     direccion: '',
     localidad: '',
     telefono: '',
+    dni: '',
+    CUIT: '',
     email: '', // Email de la empresa
     password: '', // Contraseña para la empresa (aunque no usaremos bcrypt)
     categoria: '',
