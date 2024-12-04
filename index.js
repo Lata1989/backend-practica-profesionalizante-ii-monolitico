@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import clienteRoutes from './routes/clienteRoutes.js';
 import empresaRoutes from './routes/empresaRoutes.js';
 import queueRoutes from './routes/queueRoutes.js';
+import queueConfigRoutes from './routes/queueConfigRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 
@@ -23,9 +24,10 @@ app.get("/", (req,res) => {
 
 // Rutas principales
 app.use('/auth', authRoutes); // Todo probado en Postman - OK
-app.use('/clientes', clienteRoutes);
+app.use('/clientes', clienteRoutes); // Todo probado en Postman - OK
 app.use('/empresas', empresaRoutes); // Todo probado en Postman - OK
 app.use('/queue', queueRoutes);
+app.use('/queueConfig', queueConfigRoutes);
 app.use('/users', userRoutes); // Todo probado en Postman - OK
 
 // Arrancar servidor
