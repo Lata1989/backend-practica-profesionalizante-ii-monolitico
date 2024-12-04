@@ -13,7 +13,7 @@ export const validateToken = (req, res, next) => {
     req.user = decoded;
 
     // Validar que siempre exista un campo identificador uniforme
-    if (!req.user.userId && !req.user.empresaId) {
+    if (!req.user.userId && !req.user.idEmpresa) {
       return res.status(401).json({ message: 'Token inválido: faltan identificadores' });
     }
 

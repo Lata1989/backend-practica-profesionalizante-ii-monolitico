@@ -22,7 +22,7 @@ app.get("/", (req,res) => {
 })
 
 // Rutas principales
-app.use('/auth', authRoutes);
+app.use('/auth', authRoutes); // Todo probado en Postman - OK
 app.use('/clientes', clienteRoutes);
 app.use('/empresas', empresaRoutes); // Todo probado en Postman - OK
 app.use('/queue', queueRoutes);

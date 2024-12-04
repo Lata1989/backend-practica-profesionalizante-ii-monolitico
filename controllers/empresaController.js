@@ -98,13 +98,6 @@ export const actualizarEmpresa = async (req, res) => {
       _id: { $ne: new ObjectId(empresaId) }  // Excluir la empresa que estamos actualizando
     });
 
-    // console.log(empresaExistente);
-    // console.log(`El mail de la empresa es: ${empresaExistente.email}`);
-    // console.log(`El cuit de la empresa es: ${empresaExistente.cuit}`);
-    // console.log(`El id de la empresa es: ${empresaExistente._id}`);
-    // console.log(`El id que llega en el body es: ${empresaId}`);
-  
-
     // Si se encuentra otra empresa con el mismo email o cuit
     if (empresaExistente) {
       return res.status(400).json({ message: 'El email o el cuit ya están registrados por otra empresa' });

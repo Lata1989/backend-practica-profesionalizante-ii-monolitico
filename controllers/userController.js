@@ -51,6 +51,28 @@ export const registrarUsuario = async (req, res) => {
 
 // Función para obtener todos los usuarios de una empresa (filtrando los borrados)
 export const obtenerUsuarios = async (req, res) => {
+  const { idEmpresa } = req.params; // idEmpresa inyectado por addIdEmpresaToUrl
+
+  try {
+    const db = getDB();
+
+    // Obtener los usuarios de la empresa especificada, excluyendo los borrados
+    const usuarios = await db.collection('usuarios').find({ idEmpresa, fechaBorrado: null }).toArray();
+
+    if (usuarios.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron usuarios para esta empresa' });
+    }
+
+    res.status(200).json({ usuarios });
+  } catch (error) {
+    console.error('Error al obtener los usuarios:', error);
+    res.status(500).json({ message: 'Error al obtener los usuarios' });
+  }
+};
+
+/*
+// Función para obtener todos los usuarios de una empresa (filtrando los borrados)
+export const obtenerUsuarios = async (req, res) => {
   const { empresaId } = req.params;
 
   try {
@@ -69,6 +91,7 @@ export const obtenerUsuarios = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener los usuarios' });
   }
 };
+*/
 
 // Función para obtener un usuario por su ID (verificando que no esté borrado)
 export const obtenerUsuario = async (req, res) => {

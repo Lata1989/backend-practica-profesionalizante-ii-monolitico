@@ -1,5 +1,8 @@
 import express from 'express';
 import { registrarCliente, obtenerClientes, obtenerCliente, actualizarCliente, eliminarCliente } from '../controllers/clienteController.js';
+
+// Middlewares
+import { addIdEmpresaToUrl } from '../middlewares/addIdEmpresaToURL.js';
 import { validateToken } from '../middlewares/validateToken.js';  
 import { validateRol } from '../middlewares/validateRol.js';      
 
@@ -9,7 +12,7 @@ const router = express.Router();
 router.post('/clientes', validateToken, validateRol('owner', 'admin'), registrarCliente);
 
 // Ruta para obtener todos los clientes de una empresa (solo puede acceder 'owner' y 'admin')
-router.get('/clientes/empresa/:empresaId', validateToken, validateRol('owner', 'admin'), obtenerClientes);
+router.get('/clientes/empresa', validateToken, addIdEmpresaToUrl, validateRol('owner', 'admin'), obtenerClientes);
 
 // Ruta para obtener un cliente por su ID (solo puede acceder 'owner' y 'admin')
 router.get('/clientes/:clienteId', validateToken, validateRol('owner', 'admin'), obtenerCliente);

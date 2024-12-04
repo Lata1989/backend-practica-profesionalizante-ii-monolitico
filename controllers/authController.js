@@ -25,7 +25,7 @@ export const loginEmpresa = async (req, res) => {
     // Crear un JWT para la empresa con rol 'owner'
     const token = jwt.sign(
       {
-        empresaId: empresa._id, // ID de la empresa
+        idEmpresa: empresa._id, // ID de la empresa
         email: empresa.email,
         role: 'owner', // Rol de la empresa como 'owner'
       },
@@ -39,7 +39,7 @@ export const loginEmpresa = async (req, res) => {
     res.status(200).json({
       message: 'Autenticación exitosa',
       token,
-      empresaId: empresa._id.toString(), // Devolver el ID como cadena
+      idEmpresa: empresa._id.toString(), // Devolver el ID como cadena
       role: 'owner',  // Devolver el rol 'owner' en la respuesta
     });
   } catch (error) {

@@ -8,8 +8,11 @@ import {
   eliminarUsuario,
   reactivarUsuario
 } from '../controllers/userController.js';
-import { validateToken } from '../middlewares/validateToken.js';  // Middleware para validar token
-import { validateRol } from '../middlewares/validateRol.js';      // Middleware para validar rol
+
+// Middlewares
+import { addIdEmpresaToUrl } from '../middlewares/addIdEmpresaToURL.js';
+import { validateToken } from '../middlewares/validateToken.js';  
+import { validateRol } from '../middlewares/validateRol.js';      
 
 const router = express.Router();
 
@@ -17,7 +20,8 @@ const router = express.Router();
 router.post('/usuarios', validateToken, validateRol('owner'), registrarUsuario);
 
 // Ruta para obtener todos los usuarios de una empresa (solo puede acceder 'owner')
-router.get('/usuarios/empresa/:empresaId', validateToken, validateRol('owner'), obtenerUsuarios);
+router.get('/usuarios/empresa', validateToken, addIdEmpresaToUrl, validateRol('owner'), obtenerUsuarios);
+// router.get('/usuarios/empresa/:empresaId', validateToken, addIdEmpresaToUrl, validateRol('owner'), obtenerUsuarios);
 
 // Ruta para obtener un usuario específico por su ID (solo puede acceder 'owner')
 router.get('/usuarios/:usuarioId', validateToken, validateRol('owner'), obtenerUsuario);

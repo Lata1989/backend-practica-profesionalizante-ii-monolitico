@@ -1,42 +1,46 @@
 import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js'; // Asegúrate de tener una función que te conecte a la base de datos
 
-// Registrar un nuevo cliente
 export const registrarCliente = async (req, res) => {
-  const { nombre, apellido, direccion, localidad, telefono, email, password, categoria, vip, dni, CUIT } = req.body;
-  const { idEmpresa } = req.user; // ID de la empresa del usuario logueado
+  const { nombre, apellido, direccion, localidad, telefono, dni, CUIT, email, password, categoria, vip } = req.body;
+  const { idEmpresa, role } = req.user; // Obtenemos idEmpresa y role del token decodificado
 
-  // Verificar si el email o DNI ya existen en la misma empresa
+  // Validamos que el usuario tenga una empresa asociada
+  if (!idEmpresa) {
+    return res.status(400).json({ message: 'No se puede registrar un cliente sin un idEmpresa válido' });
+  }
+
+  const cliente = {
+    nombre,
+    apellido,
+    direccion,
+    localidad,
+    telefono,
+    dni,
+    CUIT,
+    email,
+    password,
+    categoria,
+    vip,
+    fechaRegistro: new Date(),
+    fechaBorrado: null,
+    idEmpresa, // Asociamos el cliente a la empresa del usuario
+  };
+
   try {
     const db = getDB();
-    const clienteExistente = await db.collection('clientes').findOne({
-      $or: [
-        { email: email, idEmpresa: idEmpresa },
-        { dni: dni, idEmpresa: idEmpresa }
-      ]
+
+    // Validar unicidad de dni y email dentro de la empresa
+    const existeCliente = await db.collection('clientes').findOne({
+      idEmpresa,
+      $or: [{ dni }, { email }],
     });
 
-    if (clienteExistente) {
-      return res.status(400).json({ message: 'El DNI o el email ya están registrados en esta empresa' });
+    if (existeCliente) {
+      return res.status(409).json({ message: 'El DNI o el email ya están registrados para esta empresa.' });
     }
 
-    const cliente = {
-      nombre,
-      apellido,
-      direccion,
-      localidad,
-      telefono,
-      email,
-      password, // Mantener la contraseña en texto plano como lo mencionaste
-      categoria,
-      vip,
-      fechaRegistro: new Date(),
-      fechaBorrado: null,
-      idEmpresa, // Asociamos el cliente a la empresa del usuario
-      dni,
-      CUIT,
-    };
-
+    // Insertar cliente en la base de datos
     const result = await db.collection('clientes').insertOne(cliente);
     res.status(201).json({ message: 'Cliente registrado con éxito', clienteId: result.insertedId });
   } catch (error) {
@@ -45,6 +49,28 @@ export const registrarCliente = async (req, res) => {
   }
 };
 
+// Obtener todos los clientes de una empresa
+export const obtenerClientes = async (req, res) => {
+  const { idEmpresa } = req.params; // idEmpresa inyectado por addIdEmpresaToUrl
+
+  try {
+    const db = getDB();
+
+    // Obtener los clientes de la empresa especificada, excluyendo los borrados
+    const clientes = await db.collection('clientes').find({ idEmpresa, fechaBorrado: null }).toArray();
+
+    if (clientes.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron clientes para esta empresa' });
+    }
+
+    res.status(200).json({ clientes });
+  } catch (error) {
+    console.error('Error al obtener los clientes:', error);
+    res.status(500).json({ message: 'Error al obtener los clientes' });
+  }
+};
+
+/*
 // Obtener todos los clientes de una empresa
 export const obtenerClientes = async (req, res) => {
   const { empresaId } = req.params;
@@ -63,6 +89,7 @@ export const obtenerClientes = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener los clientes' });
   }
 };
+*/
 
 // Obtener un cliente por su ID
 export const obtenerCliente = async (req, res) => {
