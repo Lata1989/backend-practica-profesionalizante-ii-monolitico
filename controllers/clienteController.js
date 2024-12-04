@@ -94,6 +94,33 @@ export const obtenerClientes = async (req, res) => {
 // Obtener un cliente por su ID
 export const obtenerCliente = async (req, res) => {
   const { clienteId } = req.params;
+  const { idEmpresa } = req.user; // Obtenemos el id de la empresa del token
+
+  try {
+    const db = getDB();
+
+    // Buscar el cliente por su ID y verificar que no esté borrado y pertenezca a la empresa
+    const cliente = await db.collection('clientes').findOne({
+      _id: new ObjectId(clienteId),
+      fechaBorrado: null,
+      idEmpresa: idEmpresa,  // Filtrar por idEmpresa que viene del token
+    });
+
+    if (!cliente) {
+      return res.status(404).json({ message: 'Cliente no encontrado o ha sido borrado o no pertenece a esta empresa' });
+    }
+
+    res.status(200).json({ cliente });
+  } catch (error) {
+    console.error('Error al obtener el cliente:', error);
+    res.status(500).json({ message: 'Error al obtener el cliente' });
+  }
+};
+
+/*
+// Obtener un cliente por su ID
+export const obtenerCliente = async (req, res) => {
+  const { clienteId } = req.params;
 
   try {
     const db = getDB();
@@ -112,6 +139,7 @@ export const obtenerCliente = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener el cliente' });
   }
 };
+*/
 
 // Actualizar los datos de un cliente
 export const actualizarCliente = async (req, res) => {
@@ -169,5 +197,39 @@ export const eliminarCliente = async (req, res) => {
   } catch (error) {
     console.error('Error al eliminar cliente:', error);
     res.status(500).json({ message: 'Error al eliminar cliente' });
+  }
+};
+
+// Reactivar un cliente (quitar la fecha de borrado)
+export const reactivarCliente = async (req, res) => {
+  const { clienteId } = req.params;
+
+  try {
+    const db = getDB();
+    
+    // Buscar el cliente por su ID y verificar que esté eliminado
+    const cliente = await db.collection('clientes').findOne({ 
+      _id: new ObjectId(clienteId),
+      fechaBorrado: { $ne: null } // Verificar que tenga fechaBorrado
+    });
+
+    if (!cliente) {
+      return res.status(404).json({ message: 'Cliente no encontrado o no está eliminado' });
+    }
+
+    // Reactivar el cliente (eliminamos la fechaBorrado)
+    const result = await db.collection('clientes').updateOne(
+      { _id: new ObjectId(clienteId) },
+      { $set: { fechaBorrado: null } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'No se pudo reactivar el cliente' });
+    }
+
+    res.status(200).json({ message: 'Cliente reactivado con éxito' });
+  } catch (error) {
+    console.error('Error al reactivar cliente:', error);
+    res.status(500).json({ message: 'Error al reactivar cliente' });
   }
 };

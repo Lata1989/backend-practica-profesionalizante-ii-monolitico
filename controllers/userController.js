@@ -96,6 +96,33 @@ export const obtenerUsuarios = async (req, res) => {
 // Función para obtener un usuario por su ID (verificando que no esté borrado)
 export const obtenerUsuario = async (req, res) => {
   const { usuarioId } = req.params;
+  const { idEmpresa } = req.user; // Obtenemos el id de la empresa del token
+
+  try {
+    const db = getDB();
+
+    // Buscar el usuario por su ID y verificar que no esté borrado y pertenezca a la empresa
+    const usuario = await db.collection('usuarios').findOne({
+      _id: new ObjectId(usuarioId),
+      fechaBorrado: null,
+      idEmpresa: idEmpresa,  // Filtrar por idEmpresa que viene del token
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuario no encontrado o borrado o no pertenece a esta empresa' });
+    }
+
+    res.status(200).json({ usuario });
+  } catch (error) {
+    console.error('Error al obtener el usuario:', error);
+    res.status(500).json({ message: 'Error al obtener el usuario' });
+  }
+};
+
+/*
+// Función para obtener un usuario por su ID (verificando que no esté borrado)
+export const obtenerUsuario = async (req, res) => {
+  const { usuarioId } = req.params;
 
   try {
     const db = getDB();
@@ -113,6 +140,7 @@ export const obtenerUsuario = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener el usuario' });
   }
 };
+*/
 
 export const obtenerMiPerfil = async (req, res) => {
   const { usuariId } = req.params;

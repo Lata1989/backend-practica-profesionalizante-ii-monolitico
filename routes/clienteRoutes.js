@@ -1,5 +1,5 @@
 import express from 'express';
-import { registrarCliente, obtenerClientes, obtenerCliente, actualizarCliente, eliminarCliente } from '../controllers/clienteController.js';
+import { registrarCliente, obtenerClientes, obtenerCliente, actualizarCliente, eliminarCliente, reactivarCliente } from '../controllers/clienteController.js';
 
 // Middlewares
 import { addIdEmpresaToUrl } from '../middlewares/addIdEmpresaToURL.js';
@@ -22,5 +22,8 @@ router.put('/clientes/:clienteId', validateToken, validateRol('owner', 'admin'),
 
 // Ruta para eliminar un cliente (solo puede acceder 'owner' y 'admin')
 router.delete('/clientes/:clienteId', validateToken, validateRol('owner', 'admin'), eliminarCliente);
+
+// Ruta para reactivar un cliente (solo puede acceder 'owner' y 'admin')
+router.put('/clientes/reactivar/:clienteId', validateToken, validateRol('owner', 'admin'), reactivarCliente);
 
 export default router;
