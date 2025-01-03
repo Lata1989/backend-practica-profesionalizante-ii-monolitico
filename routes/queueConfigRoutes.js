@@ -1,22 +1,30 @@
 import express from 'express';
-import { obtenerConfigCola, modificarConfigCola, crearConfigCola } from '../controllers/queueConfigController.js';
-import { validateToken } from '../middlewares/validateToken.js';  // Importamos el middleware de validación de token
-import { validateRol } from '../middlewares/validateRol.js';  // Importamos el middleware para validar el rol
+import {
+  crearConfiguracion,
+  obtenerConfiguraciones,
+  obtenerConfiguracionPorId,
+  actualizarConfiguracion,
+  eliminarConfiguracion,
+} from '../controllers/queueConfigController.js';
+import { validateToken } from '../middlewares/validateToken.js'; 
+import { validateRol } from '../middlewares/validateRol.js'; 
+import { addIdEmpresaToUrl } from '../middlewares/addIdEmpresaToURL.js'; // Middleware para filtrar por empresa
 
 const router = express.Router();
 
-// Aca van las rutas
+// Obtener todas las configuraciones de la empresa
+router.get('/', validateToken, addIdEmpresaToUrl, validateRol('owner'), obtenerConfiguraciones);
 
-// Ruta para obtener la configuración de la cola
-router.get('/config', validateToken, obtenerConfigCola);
+// Crear nueva configuración (solo accesible para el owner)
+router.post('/', validateToken, validateRol('owner'), addIdEmpresaToUrl, crearConfiguracion);
 
-// Ruta para crear una nueva configuración de la cola (solo accesible para el owner)
-router.post('/config', validateToken, validateRol('owner'), crearConfigCola);
+// Obtener una configuración específica por ID
+router.get('/:id', validateToken, addIdEmpresaToUrl, validateRol('owner'), obtenerConfiguracionPorId);
 
-// Ruta para modificar la configuración de la cola (solo accesible para el owner)
-router.put('/config', validateToken, validateRol('owner'), modificarConfigCola);
+// Actualizar una configuración específica
+router.put('/:id', validateToken, addIdEmpresaToUrl, validateRol('owner'), actualizarConfiguracion);
 
-
-// Hasta aca
+// Eliminar una configuración (soft delete)
+router.delete('/:id', validateToken, addIdEmpresaToUrl, validateRol('owner'), eliminarConfiguracion);
 
 export default router;

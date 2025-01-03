@@ -27,7 +27,7 @@ app.use('/auth', authRoutes); // Todo probado en Postman - OK
 app.use('/clientes', clienteRoutes); // Todo probado en Postman - OK
 app.use('/empresas', empresaRoutes); // Todo probado en Postman - OK
 app.use('/queue', queueRoutes);
-app.use('/queueConfig', queueConfigRoutes);
+app.use('/queueConfig', queueConfigRoutes); // TOdo probado en Postman - OK
 app.use('/users', userRoutes); // Todo probado en Postman - OK
 
 // Arrancar servidor

@@ -12,7 +12,8 @@ backend/
 │   └── userController.js        # Controlador para CRUD de usuarios (Admin/Staff)│
 │
 ├── middlewares/
-│   ├── addIdEmpresaToUrl.js           # Middleware para agregar el IdEmpresa a la Url
+│   ├── generateQRCode.js     # Middleware para generar el QR
+│   ├── addIdEmpresaToUrl.js     # Middleware para agregar el IdEmpresa a la Url
 │   ├── validateRol.js           # Middleware para validar los roles de los owners, admin y staff
 │   └── validateToken.js         # Middleware para validar JWT y roles
 │
